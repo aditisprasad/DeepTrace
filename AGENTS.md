@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep page route modules thin and place shared interface primitives, application shell, and domain helpers in reusable component/lib modules so new investigations can evolve without duplicating page logic.
+- Access organization and investigation records through the generated browser Cloud client under row-level security; privileged work must remain server-side and cannot be authorized by client state alone.
