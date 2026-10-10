@@ -52,25 +52,25 @@ export async function fetchWorkspaceRecords(
   organizationId: string,
   caseId?: string,
 ): Promise<CloudRecord[]> {
-  const builders = {
-    cases: () => supabase.from("cases").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    evidence: () => supabase.from("evidence").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    entities: () => supabase.from("entities").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    relationships: () => supabase.from("relationships").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    campaigns: () => supabase.from("campaigns").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    timeline_events: () => supabase.from("timeline_events").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    findings: () => supabase.from("findings").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    attack_techniques: () => supabase.from("attack_techniques").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    audit_logs: () => supabase.from("audit_logs").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    evidence_sources: () => supabase.from("evidence_sources").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
-    entity_observations: () => supabase.from("entity_observations").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }),
+  const filterCase = (rows: CloudRecord[]) => caseId ? rows.filter((row) => row.case_id === caseId) : rows;
+  const unwrap = <T extends object>(result: { data: T[] | null; error: unknown }) => {
+    if (result.error) throw result.error;
+    return (result.data ?? []).map((row) => Object.fromEntries(Object.entries(row)) as CloudRecord);
   };
 
-  let query = builders[table]();
-  if (caseId) query = query.eq("case_id", caseId);
-  const { data, error } = await query;
-  if (error) throw error;
-  return (data ?? []).map((row) => Object.fromEntries(Object.entries(row)));
+  switch (table) {
+    case "cases": return unwrap(await supabase.from("cases").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }));
+    case "evidence": return filterCase(unwrap(await supabase.from("evidence").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+    case "entities": return filterCase(unwrap(await supabase.from("entities").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+    case "relationships": return filterCase(unwrap(await supabase.from("relationships").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+    case "campaigns": return filterCase(unwrap(await supabase.from("campaigns").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+    case "timeline_events": return filterCase(unwrap(await supabase.from("timeline_events").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+    case "findings": return filterCase(unwrap(await supabase.from("findings").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false})));
+    case "attack_techniques": return filterCase(unwrap(await supabase.from("attack_techniques").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+    case "audit_logs": return unwrap(await supabase.from("audit_logs").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false }));
+    case "evidence_sources": return filterCase(unwrap(await supabase.from("evidence_sources").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+    case "entity_observations": return filterCase(unwrap(await supabase.from("entity_observations").select("*").eq("organization_id", organizationId).order("created_at", { ascending: false })));
+  }
 }
 
 export function formatDate(value: unknown): string {
