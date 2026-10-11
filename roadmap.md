@@ -1,0 +1,5 @@
+- [ ] Fix and validate the current frontend issues without changing the established Cloud security model.
+- [ ] Complete the shared DeepTrace shell, sign-in surface, route metadata, and essential screens.
+- [ ] Connect case creation, initial evidence capture, and persisted listings to the existing Cloud tables and private storage.
+- [ ] Verify the signed-in case/evidence refresh workflow and review current preview diagnostics.
+- [ ] Re-read this roadmap and report working, tested, failed, and unfinished items.
