@@ -52,7 +52,7 @@ export async function fetchWorkspaceRecords(
   organizationId: string,
   caseId?: string,
 ): Promise<CloudRecord[]> {
-  const filterCase = (rows: CloudRecord[]) => caseId ? rows.filter((row) => row.case_id === caseId) : rows;
+  const filterCase = (rows: CloudRecord[]) => caseId ? rows.filter((row) => row["case_id"] === caseId) : rows;
   const unwrap = <T extends object>(result: { data: T[] | null; error: unknown }) => {
     if (result.error) throw result.error;
     return (result.data ?? []).map((row) => Object.fromEntries(Object.entries(row)) as CloudRecord);
@@ -112,7 +112,7 @@ export function recordLabel(record: CloudRecord): string {
     const value = record[key];
     if (typeof value === "string" && value.trim()) return value;
   }
-  return typeof record.id === "string" ? record.id : "Workspace record";
+  return typeof record["id"] === "string" ? record["id"] : "Workspace record";
 }
 
 export function recordDetail(record: CloudRecord): string {
@@ -121,4 +121,27 @@ export function recordDetail(record: CloudRecord): string {
     if (typeof value === "string" && value.trim()) return key.endsWith("_at") ? formatDate(value) : humanize(value);
   }
   return "Recorded in this workspace";
+}
+
+export function routeHead(title: string, description: string) {
+  return {
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  };
+}
+
+export async function fetchCurrentWorkspace(table: WorkspaceTable, caseId?: string) {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw error;
+  if (!data.user) throw new Error("Sign in to view this workspace.");
+  const identity = await fetchWorkspaceIdentity(data.user.id);
+  if (!identity) throw new Error("Your workspace is still being prepared.");
+  const records = await fetchWorkspaceRecords(table, identity.organizationId, caseId);
+  return { records, identity, userId: data.user.id };
 }
