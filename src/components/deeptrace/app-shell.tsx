@@ -1,18 +1,18 @@
 import {
-  Activity, Archive, Bell, BookOpen, BrainCircuit, BriefcaseBusiness, Bug,
+  Activity, Archive, Bell, BrainCircuit, BriefcaseBusiness,
   ChevronDown, CircleHelp, Database, FileSearch, FileText, Fingerprint, Gauge,
   GitBranch, Layers3, LogOut, Menu, Network, Plus, Search, Settings2, Shield,
   ShieldAlert, Target, UserRound, X,
 } from "lucide-react";
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchWorkspaceIdentity, type WorkspaceIdentity } from "@/lib/deeptrace";
 import { Button } from "@/components/ui/button";
 
 type SessionState = {
   status: "checking" | "signed-out" | "signed-in" | "error";
-  user: { id: string; email?: string } | null;
+  user: { id: string; email?: string | undefined } | null;
   identity: WorkspaceIdentity | null;
   error: string | null;
 };
@@ -25,7 +25,7 @@ export function useDeepTraceSession() {
   return useContext(SessionContext);
 }
 
-const navigation = [
+const navigation: { section: string; items: { label: string; to: string; icon: typeof Gauge }[] }[] = [
   { section: "COMMAND CENTER", items: [{ label: "Command Center", to: "/", icon: Gauge }] },
   { section: "INVESTIGATIONS", items: [
     { label: "Cases", to: "/cases", icon: BriefcaseBusiness },
@@ -48,13 +48,14 @@ const navigation = [
     { label: "Audit Log", to: "/audit-log", icon: Fingerprint },
     { label: "Settings", to: "/settings", icon: Settings2 },
   ] },
-] as const;
+];
 
 export function DeepTraceShell({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<SessionState>({ status: "checking", user: null, identity: null, error: null });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [globalSearch, setGlobalSearch] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     let alive = true;
@@ -93,7 +94,7 @@ export function DeepTraceShell({ children }: { children: ReactNode }) {
     await navigate({ to: "/auth", replace: true });
   }
 
-  function submitSearch(event: React.FormEvent<HTMLFormElement>) {
+  function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     void navigate({ to: "/cases", search: { q: globalSearch }, resetScroll: false });
   }
@@ -139,7 +140,7 @@ export function DeepTraceShell({ children }: { children: ReactNode }) {
         </aside>
         <div className="main-column">
           <header className="top-bar">
-            <div className="top-leading"><Button variant="ghost" size="icon" className="mobile-menu" aria-label="Open navigation" onClick={() => setMobileOpen(true)}><Menu size={18} /></Button><span className="breadcrumb-root">WORKSPACE</span><span className="breadcrumb-separator">/</span><span className="breadcrumb-current">{typeof window === "undefined" ? "COMMAND CENTER" : getPageLabel(window.location.pathname)}</span></div>
+            <div className="top-leading"><Button variant="ghost" size="icon" className="mobile-menu" aria-label="Open navigation" onClick={() => setMobileOpen(true)}><Menu size={18} /></Button><span className="breadcrumb-root">WORKSPACE</span><span className="breadcrumb-separator">/</span><span className="breadcrumb-current">{getPageLabel(location.pathname)}</span></div>
             <form className="global-search" onSubmit={submitSearch} role="search"><Search size={15} /><input aria-label="Search investigations" placeholder="Search investigations…" value={globalSearch} onChange={(event) => setGlobalSearch(event.target.value)} /><kbd>↵</kbd></form>
             <div className="top-actions"><span className="secure-chip"><span />SECURE</span><Button variant="ghost" size="icon" aria-label="Notifications" title="Notifications"><Bell size={17} /></Button><Link to="/auth" className="top-user" aria-label={session.user ? "Account" : "Sign in"}><UserRound size={16} /></Link></div>
           </header>
