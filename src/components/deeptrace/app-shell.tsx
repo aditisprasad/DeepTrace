@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchWorkspaceIdentity, type WorkspaceIdentity } from "@/lib/deeptrace";
 import { Button } from "@/components/ui/button";
@@ -56,10 +57,11 @@ export function DeepTraceShell({ children }: { children: ReactNode }) {
   const [globalSearch, setGlobalSearch] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let alive = true;
-    const update = async (user: { id: string; email?: string } | null) => {
+    const update = async (user: { id: string; email?: string | undefined } | null) => {
       if (!user) {
         if (alive) setSession({ status: "signed-out", user: null, identity: null, error: null });
         return;
@@ -90,6 +92,8 @@ export function DeepTraceShell({ children }: { children: ReactNode }) {
   }, []);
 
   async function signOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
     await supabase.auth.signOut();
     await navigate({ to: "/auth", replace: true });
   }
@@ -150,6 +154,10 @@ export function DeepTraceShell({ children }: { children: ReactNode }) {
       </div>
     </SessionContext.Provider>
   );
+}
+
+export function DeepTraceRoute({ children }: { children: ReactNode }) {
+  return <DeepTraceShell>{children}</DeepTraceShell>;
 }
 
 function getPageLabel(path: string) {
