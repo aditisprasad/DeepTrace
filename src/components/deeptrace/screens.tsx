@@ -43,7 +43,7 @@ export function CommandCenterScreen() {
           <div className="quick-grid">
             <QuickCard to="/cases/new" icon={BriefcaseBusiness} title="New investigation" text="Open a case, then attach evidence to it." />
             <QuickCard to="/evidence" icon={Archive} title="Evidence Vault" text="Review submitted evidence and its provenance." />
-            <QuickCard to="/graph" icon={Network} title="Threat Graph" description="Explore relationships on a labelled demo graph." />
+            <QuickCard to="/graph" icon={Network} title="Threat Graph" text="Explore relationships on a labelled demo graph." />
           </div>
         </section>
         <section className="section-block">
@@ -521,7 +521,7 @@ export function AuthScreen() {
     setNotice(null);
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (!result.redirected && result.error) {
-      setNotice(result.error instanceof Error ? result.message : "Google sign-in could not be started.");
+      setNotice(result.error.message);
     }
   }
 
