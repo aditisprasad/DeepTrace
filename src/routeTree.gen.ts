@@ -9,27 +9,378 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AttackRouteImport } from './routes/attack'
+import { Route as AuditLogRouteImport } from './routes/audit-log'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CampaignsRouteImport } from './routes/campaigns'
+import { Route as CasesRouteImport } from './routes/cases'
+import { Route as CopilotRouteImport } from './routes/copilot'
+import { Route as DataSourcesRouteImport } from './routes/data-sources'
+import { Route as EvidenceRouteImport } from './routes/evidence'
+import { Route as FindingsRouteImport } from './routes/findings'
+import { Route as GraphRouteImport } from './routes/graph'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TimelineRouteImport } from './routes/timeline'
+import { Route as CasesCaseIdRouteImport } from './routes/cases.$caseId'
+import { Route as CasesNewRouteImport } from './routes/cases.new'
 
-export interface FileRoutesByFullPath {}
-export interface FileRoutesByTo {}
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AttackRoute = AttackRouteImport.update({
+  id: '/attack',
+  path: '/attack',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditLogRoute = AuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampaignsRoute = CampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CasesRoute = CasesRouteImport.update({
+  id: '/cases',
+  path: '/cases',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CopilotRoute = CopilotRouteImport.update({
+  id: '/copilot',
+  path: '/copilot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataSourcesRoute = DataSourcesRouteImport.update({
+  id: '/data-sources',
+  path: '/data-sources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvidenceRoute = EvidenceRouteImport.update({
+  id: '/evidence',
+  path: '/evidence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindingsRoute = FindingsRouteImport.update({
+  id: '/findings',
+  path: '/findings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GraphRoute = GraphRouteImport.update({
+  id: '/graph',
+  path: '/graph',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimelineRoute = TimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CasesCaseIdRoute = CasesCaseIdRouteImport.update({
+  id: '/$caseId',
+  path: '/$caseId',
+  getParentRoute: () => CasesRoute,
+} as any)
+const CasesNewRoute = CasesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => CasesRoute,
+} as any)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/attack': typeof AttackRoute
+  '/audit-log': typeof AuditLogRoute
+  '/auth': typeof AuthRoute
+  '/campaigns': typeof CampaignsRoute
+  '/cases': typeof CasesRouteWithChildren
+  '/copilot': typeof CopilotRoute
+  '/data-sources': typeof DataSourcesRoute
+  '/evidence': typeof EvidenceRoute
+  '/findings': typeof FindingsRoute
+  '/graph': typeof GraphRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/timeline': typeof TimelineRoute
+  '/cases/$caseId': typeof CasesCaseIdRoute
+  '/cases/new': typeof CasesNewRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/attack': typeof AttackRoute
+  '/audit-log': typeof AuditLogRoute
+  '/auth': typeof AuthRoute
+  '/campaigns': typeof CampaignsRoute
+  '/cases': typeof CasesRouteWithChildren
+  '/copilot': typeof CopilotRoute
+  '/data-sources': typeof DataSourcesRoute
+  '/evidence': typeof EvidenceRoute
+  '/findings': typeof FindingsRoute
+  '/graph': typeof GraphRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/timeline': typeof TimelineRoute
+  '/cases/$caseId': typeof CasesCaseIdRoute
+  '/cases/new': typeof CasesNewRoute
+}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/attack': typeof AttackRoute
+  '/audit-log': typeof AuditLogRoute
+  '/auth': typeof AuthRoute
+  '/campaigns': typeof CampaignsRoute
+  '/cases': typeof CasesRouteWithChildren
+  '/copilot': typeof CopilotRoute
+  '/data-sources': typeof DataSourcesRoute
+  '/evidence': typeof EvidenceRoute
+  '/findings': typeof FindingsRoute
+  '/graph': typeof GraphRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/timeline': typeof TimelineRoute
+  '/cases/$caseId': typeof CasesCaseIdRoute
+  '/cases/new': typeof CasesNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: never
+  fullPaths:
+    | '/'
+    | '/attack'
+    | '/audit-log'
+    | '/auth'
+    | '/campaigns'
+    | '/cases'
+    | '/copilot'
+    | '/data-sources'
+    | '/evidence'
+    | '/findings'
+    | '/graph'
+    | '/reports'
+    | '/settings'
+    | '/timeline'
+    | '/cases/$caseId'
+    | '/cases/new'
   fileRoutesByTo: FileRoutesByTo
-  to: never
-  id: '__root__'
+  to:
+    | '/'
+    | '/attack'
+    | '/audit-log'
+    | '/auth'
+    | '/campaigns'
+    | '/cases'
+    | '/copilot'
+    | '/data-sources'
+    | '/evidence'
+    | '/findings'
+    | '/graph'
+    | '/reports'
+    | '/settings'
+    | '/timeline'
+    | '/cases/$caseId'
+    | '/cases/new'
+  id:
+    | '__root__'
+    | '/'
+    | '/attack'
+    | '/audit-log'
+    | '/auth'
+    | '/campaigns'
+    | '/cases'
+    | '/copilot'
+    | '/data-sources'
+    | '/evidence'
+    | '/findings'
+    | '/graph'
+    | '/reports'
+    | '/settings'
+    | '/timeline'
+    | '/cases/$caseId'
+    | '/cases/new'
   fileRoutesById: FileRoutesById
 }
-export interface RootRouteChildren {}
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AttackRoute: typeof AttackRoute
+  AuditLogRoute: typeof AuditLogRoute
+  AuthRoute: typeof AuthRoute
+  CampaignsRoute: typeof CampaignsRoute
+  CasesRoute: typeof CasesRouteWithChildren
+  CopilotRoute: typeof CopilotRoute
+  DataSourcesRoute: typeof DataSourcesRoute
+  EvidenceRoute: typeof EvidenceRoute
+  FindingsRoute: typeof FindingsRoute
+  GraphRoute: typeof GraphRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
+  TimelineRoute: typeof TimelineRoute
 }
 
-const rootRouteChildren: RootRouteChildren = {}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/attack': {
+      id: '/attack'
+      path: '/attack'
+      fullPath: '/attack'
+      preLoaderRoute: typeof AttackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-log': {
+      id: '/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AuditLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campaigns': {
+      id: '/campaigns'
+      path: '/campaigns'
+      fullPath: '/campaigns'
+      preLoaderRoute: typeof CampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cases': {
+      id: '/cases'
+      path: '/cases'
+      fullPath: '/cases'
+      preLoaderRoute: typeof CasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/copilot': {
+      id: '/copilot'
+      path: '/copilot'
+      fullPath: '/copilot'
+      preLoaderRoute: typeof CopilotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-sources': {
+      id: '/data-sources'
+      path: '/data-sources'
+      fullPath: '/data-sources'
+      preLoaderRoute: typeof DataSourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/evidence': {
+      id: '/evidence'
+      path: '/evidence'
+      fullPath: '/evidence'
+      preLoaderRoute: typeof EvidenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/findings': {
+      id: '/findings'
+      path: '/findings'
+      fullPath: '/findings'
+      preLoaderRoute: typeof FindingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/graph': {
+      id: '/graph'
+      path: '/graph'
+      fullPath: '/graph'
+      preLoaderRoute: typeof GraphRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timeline': {
+      id: '/timeline'
+      path: '/timeline'
+      fullPath: '/timeline'
+      preLoaderRoute: typeof TimelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cases/$caseId': {
+      id: '/cases/$caseId'
+      path: '/$caseId'
+      fullPath: '/cases/$caseId'
+      preLoaderRoute: typeof CasesCaseIdRouteImport
+      parentRoute: typeof CasesRoute
+    }
+    '/cases/new': {
+      id: '/cases/new'
+      path: '/new'
+      fullPath: '/cases/new'
+      preLoaderRoute: typeof CasesNewRouteImport
+      parentRoute: typeof CasesRoute
+    }
+  }
+}
+
+interface CasesRouteChildren {
+  CasesCaseIdRoute: typeof CasesCaseIdRoute
+  CasesNewRoute: typeof CasesNewRoute
+}
+
+const CasesRouteChildren: CasesRouteChildren = {
+  CasesCaseIdRoute: CasesCaseIdRoute,
+  CasesNewRoute: CasesNewRoute,
+}
+
+const CasesRouteWithChildren = CasesRoute._addFileChildren(CasesRouteChildren)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AttackRoute: AttackRoute,
+  AuditLogRoute: AuditLogRoute,
+  AuthRoute: AuthRoute,
+  CampaignsRoute: CampaignsRoute,
+  CasesRoute: CasesRouteWithChildren,
+  CopilotRoute: CopilotRoute,
+  DataSourcesRoute: DataSourcesRoute,
+  EvidenceRoute: EvidenceRoute,
+  FindingsRoute: FindingsRoute,
+  GraphRoute: GraphRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
+  TimelineRoute: TimelineRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
