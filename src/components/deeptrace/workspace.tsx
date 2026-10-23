@@ -40,7 +40,7 @@ export function DataState({ loading, error, empty, children }: { loading: boolea
   return <>{children}</>;
 }
 
-export function RecordTable({ records, kind }: { records: CloudRecord[]; kind: "cases" | "evidence" | "campaigns" | "findings" | "attack_techniques" | "timeline_events" | "audit_logs" }) {
+export function RecordTable({ records, kind }: { records: CloudRecord[]; kind: "cases" | "evidence" | "evidence_sources" | "campaigns" | "findings" | "attack_techniques" | "timeline_events" | "audit_logs" }) {
   const columns: Record<typeof kind, { label: string; key: string }[]> = {
     cases: [{ label: "CASE", key: "case_code" }, { label: "INVESTIGATION", key: "title" }, { label: "SEVERITY", key: "severity" }, { label: "STATUS", key: "status" }, { label: "OPENED", key: "created_at" }],
     evidence: [{ label: "RECORD", key: "evidence_code" }, { label: "TYPE", key: "type" }, { label: "SUBMITTED VALUE", key: "value" }, { label: "STATUS", key: "status" }, { label: "COLLECTED", key: "collected_at" }],
@@ -49,6 +49,7 @@ export function RecordTable({ records, kind }: { records: CloudRecord[]; kind: "
     attack_techniques: [{ label: "TECHNIQUE", key: "technique_id" }, { label: "NAME", key: "name" }, { label: "TACTIC", key: "tactic" }, { label: "OBSERVED BEHAVIOR", key: "observed_behavior" }],
     timeline_events: [{ label: "OCCURRED", key: "occurred_at" }, { label: "EVENT", key: "event_type" }, { label: "DESCRIPTION", key: "description" }, { label: "CONFIDENCE", key: "confidence" }],
     audit_logs: [{ label: "TIME", key: "created_at" }, { label: "ACTION", key: "action" }, { label: "OBJECT", key: "object_type" }, { label: "DETAILS", key: "details" }],
+    evidence_sources: [{ label: "SOURCE TYPE", key: "source_type" }, { label: "SOURCE URI", key: "source_uri" }, { label: "COLLECTED", key: "collected_at" }, { label: "ADDED", key: "created_at" }],
   };
   return <div className="table-scroll"><table className="records-table"><thead><tr>{columns[kind].map((column) => <th key={column.key}>{column.label}</th>)}</tr></thead><tbody>{records.map((record, index) => <tr key={valueOf(record, "id") || `${kind}-${index}`}>{columns[kind].map((column) => {
     const value = record[column.key];
@@ -76,7 +77,7 @@ export function EmptyAction({ to, label }: { to: "/cases/new"; label: string }) 
   return <Button asChild><Link to={to}><FilePlus2 size={16} />{label}<ArrowRight size={15} /></Link></Button>;
 }
 
-export function RecordsScreen({ eyebrow, title, description, table, kind, action }: { eyebrow: string; title: string; description: string; table: WorkspaceTable; kind: "evidence" | "campaigns" | "findings" | "attack_techniques" | "timeline_events" | "audit_logs"; action?: React.ReactNode }) {
+export function RecordsScreen({ eyebrow, title, description, table, kind, action }: { eyebrow: string; title: string; description: string; table: WorkspaceTable; kind: "evidence" | "evidence_sources" | "campaigns" | "findings" | "attack_techniques" | "timeline_events" | "audit_logs"; action?: React.ReactNode }) {
   const query = useWorkspaceRows(table);
   return <WorkspaceGate><section className="page-enter"><PageHeading eyebrow={eyebrow} title={title} description={description} action={action} /><section className="section-block"><div className="section-title-row"><div><p className="section-label">WORKSPACE RECORDS</p><h2>{query.records.length} {title.toLowerCase()} entries</h2></div><Button variant="outline" size="sm" onClick={query.refresh}><RefreshCw size={14} />Refresh</Button></div><DataState loading={query.loading} error={query.error} empty={!query.records.length}><RecordTable records={query.records} kind={kind} /></DataState></section></section></WorkspaceGate>;
 }
