@@ -123,6 +123,7 @@ export type Observation = {
   entityType: "url" | "domain" | "ip" | "email" | "hash" | "phone";
   original: string;
   normalized: string;
+  variant?: "md5" | "sha1" | "sha256";
   start: number;
   end: number;
   context: string;
@@ -161,6 +162,7 @@ export function extractFromText(text: string): { observations: Observation[]; ti
     entityType: Observation["entityType"],
     match: RegExpExecArray,
     normalize: (value: string) => string,
+    variant?: Observation["variant"],
   ) => {
     const original = match[0];
     taken.push({ start: match.index, end: match.index + original.length });
@@ -168,6 +170,7 @@ export function extractFromText(text: string): { observations: Observation[]; ti
       entityType,
       original,
       normalized: normalize(original),
+      ...(variant ? { variant } : {}),
       start: match.index,
       end: match.index + original.length,
       context: excerpt(text, match.index, match.index + original.length),
@@ -185,14 +188,14 @@ export function extractFromText(text: string): { observations: Observation[]; ti
     if (overlaps({ start: match.index, end: match.index + match[0].length }, taken)) continue;
     addObservation("email", match, (value) => value.toLowerCase());
   }
-  for (const [pattern, variant] of [[SHA256_PATTERN, 64], [SHA1_PATTERN, 40], [MD5_PATTERN, 32]] as const) {
+  for (const [pattern, variant] of [[SHA256_PATTERN, "sha256"], [SHA1_PATTERN, "sha1"], [MD5_PATTERN, "md5"]] as const) {
     for (const match of text.matchAll(pattern)) {
       if (overlaps({ start: match.index, end: match.index + match[0].length }, taken)) continue;
-      addObservation("hash", match, (value) => `${value.toLowerCase()}|${variant === 64 ? "sha256" : variant === 40 ? "sha1" : "md5"}`);
+      addObservation("hash", match, (value) => value.toLowerCase(), variant);
     }
   }
-  // Hash normalization carries the variant so the entity value stays unique per
-  // hash kind; the UI splits it before display. Hashes are stored lowercase.
+  // Hash observations keep the algorithm as a separate field; the entity value
+  // stays the plain lowercase hash so lookups match user-supplied hashes.
   for (const match of text.matchAll(IPV4_PATTERN_TEXT)) {
     if (overlaps({ start: match.index, end: match.index + match[0].length }, taken)) continue;
     addObservation("ip", match, (value) => value);
@@ -229,8 +232,3 @@ export function extractFromText(text: string): { observations: Observation[]; ti
   return { observations, timestamps };
 }
 
-export function splitHashValue(entityValue: string): { hash: string; variant: string } | null {
-  const [hash, variant] = entityValue.split("|");
-  if (!hash || !variant) return null;
-  return { hash, variant };
-}
