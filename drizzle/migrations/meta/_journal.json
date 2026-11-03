@@ -15,6 +15,13 @@
       "when": 1791480096492,
       "tag": "0001_deeptrace_evidence_storage_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793718899646,
+      "tag": "0002_add_evidence_extraction_status",
+      "breakpoints": true
     }
   ]
 }
