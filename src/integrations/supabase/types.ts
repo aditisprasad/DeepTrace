@@ -440,6 +440,7 @@ export type Database = {
           created_at: string
           created_by: string
           evidence_code: string
+          extraction_status: string
           id: string
           organization_id: string
           original_name: string | null
@@ -461,6 +462,7 @@ export type Database = {
           created_at?: string
           created_by: string
           evidence_code: string
+          extraction_status?: string
           id?: string
           organization_id: string
           original_name?: string | null
@@ -482,6 +484,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           evidence_code?: string
+          extraction_status?: string
           id?: string
           organization_id?: string
           original_name?: string | null
