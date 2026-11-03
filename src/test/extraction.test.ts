@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  checkUpload, extractFromText, hashVariant, MAX_UPLOAD_BYTES, splitHashValue, validateEvidenceValue,
-} from "@/lib/extraction";
+import { checkUpload, extractFromText, hashVariant, MAX_UPLOAD_BYTES, validateEvidenceValue } from "@/lib/extraction";
 
 const SAMPLE = [
   "Incident report follows.",
