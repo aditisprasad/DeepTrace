@@ -53,7 +53,7 @@ async function requireWriteRole(db: Db, userId: string, organizationId: string):
   const { data: allowed } = await db.rpc("has_org_role", {
     _user_id: userId,
     _organization_id: organizationId,
-    _roles: WRITE_ROLES,
+    _roles: [...WRITE_ROLES],
   });
   if (!allowed) throw new Error("Your role cannot submit evidence to this case.");
 }
@@ -62,7 +62,7 @@ async function requireLeadRole(db: Db, userId: string, organizationId: string): 
   const { data: allowed } = await db.rpc("has_org_role", {
     _user_id: userId,
     _organization_id: organizationId,
-    _roles: LEAD_ROLES,
+    _roles: [...LEAD_ROLES],
   });
   if (!allowed) throw new Error("Only administrators and lead analysts can reprocess evidence.");
 }
