@@ -14,7 +14,7 @@ describe("extractFromText", () => {
     const { observations } = extractFromText(SAMPLE);
     const urls = observations.filter((item) => item.entityType === "url");
     expect(urls).toHaveLength(1);
-    expect(urls[0].original).toBe("https://accounts.supplier-example.com/login?next=/pay");
+    expect(urls[0]?.original).toBe("https://accounts.supplier-example.com/login?next=/pay");
     expect(observations.filter((item) => item.entityType === "domain" && item.normalized === "accounts.supplier-example.com")).toHaveLength(0);
   });
 
@@ -22,7 +22,7 @@ describe("extractFromText", () => {
     const { observations } = extractFromText(SAMPLE);
     const emails = observations.filter((item) => item.entityType === "email");
     expect(emails).toHaveLength(1);
-    expect(emails[0].normalized).toBe("billing@supplier-example.com");
+    expect(emails[0]?.normalized).toBe("billing@supplier-example.com");
   });
 
   it("finds the bare domain and the IPv4 address", () => {
