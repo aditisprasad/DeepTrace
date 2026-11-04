@@ -13,9 +13,14 @@ export function useWorkspaceRows(table: WorkspaceTable, caseId?: string) {
   const [refreshKey, setRefreshKey] = useState(0);
   useEffect(() => {
     let alive = true;
-    if (status !== "signed-in" || !identity) {
+    if (status !== "ready" || !identity) {
       setRecords([]);
-      setLoading(status === "checking");
+      setLoading(
+        status === "initializing"
+          || status === "checking-auth"
+          || status === "loading-profile"
+          || status === "resolving-workspace",
+      );
       return () => { alive = false; };
     }
     setLoading(true);

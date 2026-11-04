@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CommandCenterScreen } from "@/components/deeptrace/screens";
+import { CommandCenterScreen } from "@/components/deeptrace/command-center";
 import { routeHead } from "@/lib/deeptrace";
 
 export const Route = createFileRoute("/")({

@@ -43,14 +43,18 @@ describe("extractFromText", () => {
   it("extracts the ISO timestamp", () => {
     const { timestamps } = extractFromText(SAMPLE);
     expect(timestamps).toHaveLength(1);
-    expect(timestamps[0].original).toBe("2026-01-03T15:04:05Z");
+    const timestamp = timestamps[0];
+    expect(timestamp).toBeDefined();
+    expect(timestamp?.original).toBe("2026-01-03T15:04:05Z");
   });
 
   it("extracts the phone number with canonical digits and keeps the plus", () => {
     const { observations } = extractFromText(SAMPLE);
     const phones = observations.filter((item) => item.entityType === "phone");
     expect(phones).toHaveLength(1);
-    expect(phones[0].normalized).toBe("+14155550132");
+    const phone = phones[0];
+    expect(phone).toBeDefined();
+    expect(phone?.normalized).toBe("+14155550132");
   });
 
   it("does not extract the IP, timestamp, or hash digits as phone numbers", () => {
