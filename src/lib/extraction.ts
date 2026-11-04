@@ -232,3 +232,26 @@ export function extractFromText(text: string): { observations: Observation[]; ti
   return { observations, timestamps };
 }
 
+// ---------- upload helpers (shared by browser and ingestion server) ----------
+
+/** Category of an uploaded file by extension only — no size or blocked checks. */
+export function uploadCategory(fileName: string): UploadCategory {
+  const extension = fileExtension(fileName);
+  if (IMAGE_EXTENSIONS.includes(extension)) return "image";
+  if (DOCUMENT_EXTENSIONS.includes(extension)) return "document";
+  return "text";
+}
+
+/** Evidence record type stored for a file upload. */
+export function uploadEvidenceType(category: UploadCategory): EvidenceType {
+  return category === "image" ? "screenshot" : "file";
+}
+
+/** Upper bound on text fed to pattern extraction, matching the typed-input limit. */
+export const MAX_TEXT_EXTRACTION_CHARS = 200_000;
+
+export function capExtractionText(text: string): { text: string; capped: boolean } {
+  if (text.length <= MAX_TEXT_EXTRACTION_CHARS) return { text, capped: false };
+  return { text: text.slice(0, MAX_TEXT_EXTRACTION_CHARS), capped: true };
+}
+

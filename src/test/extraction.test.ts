@@ -35,7 +35,7 @@ describe("extractFromText", () => {
     const { observations } = extractFromText(SAMPLE);
     const hashes = observations.filter((item) => item.entityType === "hash");
     expect(hashes).toHaveLength(2);
-    const variants = hashes.map((item) => splitHashValue(item.normalized)?.variant);
+    const variants = hashes.map((item) => item.variant);
     expect(variants).toContain("sha256");
     expect(variants).toContain("md5");
   });
