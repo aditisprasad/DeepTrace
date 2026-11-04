@@ -38,7 +38,9 @@ export function newEvidenceCode(): string {
 }
 
 export async function sha256Hex(bytes: Uint8Array): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const buffer = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(buffer).set(bytes);
+  const digest = await crypto.subtle.digest("SHA-256", buffer);
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
@@ -220,6 +222,8 @@ async function finalize(
   if (error) throw new Error("Extraction status could not be saved.");
 }
 
+type JsonPrimitive = string | number | boolean | null;
+
 async function audit(
   db: Db,
   args: {
@@ -228,7 +232,7 @@ async function audit(
     caseId: string;
     evidenceId: string;
     action: string;
-    details: Record<string, unknown>;
+    details: Record<string, JsonPrimitive>;
   },
 ): Promise<void> {
   const { error } = await db.from("audit_logs").insert({
